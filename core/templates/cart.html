@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Корзина — CAMRY PERFORMANS{% endblock %}
+{% block content %}
+
+<div style="background:var(--dark);border-bottom:1px solid var(--border);padding:4rem 0 2rem">
+  <div class="container">
+    <p class="section-label">МОЯ КОРЗИНА</p>
+    <h1 class="section-title">КОРЗИНА</h1>
+  </div>
+</div>
+
+<div class="container" style="padding-top:3rem;padding-bottom:5rem">
+
+  {% if items %}
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:3rem;align-items:start">
+
+    <div>
+      {% for item in items %}
+      <div style="display:grid;grid-template-columns:100px 1fr auto;gap:1.5rem;align-items:center;background:var(--card);border:1px solid var(--border);padding:1.2rem;margin-bottom:1px">
+
+        <div style="width:100px;height:100px;background:#111118;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--muted);overflow:hidden">
+          {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" style="width:100%;height:100%;object-fit:cover">
+          {% else %}
+            &#9881;
+          {% endif %}
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px;margin-bottom:0.3rem">{{ item.product.category.name }}</div>
+          <a href="/product/{{ item.product.pk }}/" style="font-weight:700;font-size:1.1rem;display:block;margin-bottom:0.5rem">{{ item.product.title }}</a>
+          <span style="color:var(--muted);font-size:0.9rem">{{ item.product.price|floatformat:0 }} сом × {{ item.qty }} шт</span>
+        </div>
+
+        <div style="text-align:right">
+          <div style="font-family:var(--font-head);font-size:1.5rem;color:var(--red);margin-bottom:0.7rem">{{ item.subtotal|floatformat:0 }} сом</div>
+          <a href="/cart/remove/{{ item.product.pk }}/" style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);border:1px solid var(--border);padding:3px 10px">УДАЛИТЬ</a>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--border);padding:2rem;position:sticky;top:80px">
+      <h3 style="font-family:var(--font-head);font-size:1.5rem;letter-spacing:3px;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem">ИТОГО</h3>
+
+      {% for item in items %}
+      <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem">
+        <span>{{ item.product.title|truncatechars:25 }}</span>
+        <span>{{ item.subtotal|floatformat:0 }} сом</span>
+      </div>
+      {% endfor %}
+
+      <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:1rem;margin-bottom:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:2px">ИТОГО:</span>
+          <span style="font-family:var(--font-head);font-size:2rem;color:var(--red)">{{ total|floatformat:0 }} сом</span>
+        </div>
+      </div>
+
+      <a href="/checkout/" class="btn-red" style="display:block;text-align:center;font-size:1.1rem;padding:0.9rem">ОФОРМИТЬ ЗАКАЗ</a>
+      <a href="/" class="btn-outline" style="display:block;text-align:center;margin-top:0.8rem;font-size:0.9rem">ПРОДОЛЖИТЬ ПОКУПКИ</a>
+    </div>
+
+  </div>
+
+  {% else %}
+  <div style="text-align:center;padding:7rem 0;color:var(--muted)">
+    <div style="font-size:4rem;margin-bottom:1.5rem">&#128722;</div>
+    <div style="font-family:var(--font-head);font-size:2.5rem;letter-spacing:4px;margin-bottom:1rem">КОРЗИНА ПУСТА</div>
+    <p style="margin-bottom:2rem">Добавьте товары из каталога</p>
+    <a href="/dept/stock/" class="btn-red" style="font-size:1rem;padding:0.7rem 2rem">ПЕРЕЙТИ В КАТАЛОГ</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

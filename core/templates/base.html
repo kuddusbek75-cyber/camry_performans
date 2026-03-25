@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CAMRY PERFORMANS{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #050507;
+      --dark: #0a0a0f;
+      --card: #0f0f18;
+      --border: #1e1e2e;
+      --red: #e63030;
+      --red2: #ff4545;
+      --gold: #c8a84b;
+      --orange: #ff8c00;
+      --purple: #a855f7;
+      --blue: #3b82f6;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+      --font-head: 'Bebas Neue', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(5,5,7,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: var(--red);
+      white-space: nowrap;
+    }
+    .nav-logo span { color: var(--text); }
+    .nav-links { display: flex; gap: 0; }
+    .nav-link {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.5rem 0.8rem;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--red2); border-bottom-color: var(--red2); }
+
+    /* Поиск в навигации */
+    .nav-search {
+      flex: 1;
+      max-width: 280px;
+      position: relative;
+    }
+    .nav-search input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 2.5rem 0.35rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .nav-search input:focus { border-color: var(--red); }
+    .nav-search input::placeholder { color: var(--muted); }
+    .nav-search button {
+      position: absolute; right: 0; top: 0; bottom: 0;
+      background: var(--red);
+      border: none;
+      color: #fff;
+      padding: 0 0.7rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.2s;
+    }
+    .nav-search button:hover { background: var(--red2); }
+
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 0.8rem; }
+    .nav-cart {
+      position: relative;
+      background: var(--red);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      transition: background 0.2s;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      white-space: nowrap;
+    }
+    .nav-cart:hover { background: var(--red2); }
+    .cart-badge {
+      position: absolute; top: -6px; right: -6px;
+      background: #ff6b00;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-btn {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { border-color: var(--red); color: var(--red); }
+    .nav-profile {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--red);
+      color: var(--red);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-profile:hover { background: var(--red); color: #fff; }
+
+    /* Мобильное меню */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+    }
+    .nav-burger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--text); transition: all 0.3s;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(5,5,7,0.98);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      z-index: 999;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.7rem 0;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--red); }
+    .mobile-search {
+      display: flex; gap: 0.5rem; margin-top: 0.5rem;
+    }
+    .mobile-search input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .mobile-search button {
+      background: var(--red);
+      border: none;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .messages-wrap {
+      position: fixed; top: 72px; right: 1rem; z-index: 999;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .msg {
+      background: var(--card);
+      border-left: 3px solid var(--red);
+      padding: 0.7rem 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+
+    .page-body { padding-top: 64px; min-height: 100vh; }
+
+    .btn-red {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      padding: 0.7rem 2rem;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-red:hover { background: var(--red2); transform: scale(1.02); }
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-head);
+      font-size: 1rem;
+      letter-spacing: 3px;
+      padding: 0.65rem 1.8rem;
+      border: 1px solid var(--border);
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+      display: block;
+    }
+    .product-card:hover { border-color: var(--red); transform: translateY(-4px); }
+    .product-card-img {
+      width: 100%; height: 200px;
+      background: #111118;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 2rem; overflow: hidden;
+    }
+    .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .product-card-body { padding: 1rem; }
+    .product-card-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+    .product-card-price {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      color: var(--red);
+      letter-spacing: 1px;
+    }
+    .product-card-price span { font-size: 0.9rem; color: var(--muted); font-family: var(--font-body); }
+    .badge-premium {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--gold); color: #000;
+      font-family: var(--font-mono); font-size: 0.6rem;
+      padding: 2px 8px; letter-spacing: 1px;
+    }
+    .badge-stock {
+      position: absolute; top: 10px; left: 10px;
+      background: #10b981; color: #fff;
+      font-size: 0.6rem; padding: 2px 8px;
+      font-family: var(--font-mono);
+    }
+    .badge-nostock {
+      position: absolute; top: 10px; left: 10px;
+      background: #555; color: #aaa;
+      font-size: 0.6rem; padding: 2px 8px;
+      font-family: var(--font-mono);
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 4px;
+      color: var(--red); text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 3rem; letter-spacing: 4px;
+      line-height: 1; margin-bottom: 1rem;
+    }
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 6rem;
+    }
+    .footer-logo {
+      font-family: var(--font-head);
+      font-size: 2rem; color: var(--red);
+      letter-spacing: 4px; margin-bottom: 0.5rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label {
+      display: block; font-size: 0.75rem;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.4rem;
+      font-family: var(--font-mono);
+    }
+    .form-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--red); }
+    .form-input::placeholder { color: var(--muted); }
+    .form-errors { list-style: none; color: var(--red2); font-size: 0.8rem; margin-top: 4px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 2rem; }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media(max-width:1024px) {
+      .nav-links { display: none; }
+      .nav-search { display: none; }
+      .nav-burger { display: flex; }
+      .nav-right .nav-btn { display: none; }
+      .nav-right .nav-profile { display: none; }
+    }
+    @media(max-width:600px) {
+      .nav { padding: 0 1rem; gap: 1rem; }
+      .nav-logo { font-size: 1.2rem; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">CAMRY<span> PERFORMANS</span></a>
+  <div class="nav-links">
+    <a href="/dept/stock/"    class="nav-link">Механизм</a>
+    <a href="/dept/interior/" class="nav-link">Салон</a>
+    <a href="/dept/body/"     class="nav-link">Кузов</a>
+    <a href="/dept/tuning/"   class="nav-link">Тюнинг</a>
+    <a href="/dept/sport/"    class="nav-link">Спорт</a>
+  </div>
+
+  <form class="nav-search" method="get" action="/search/">
+    <input type="text" name="q" placeholder="Поиск товаров...">
+    <button type="submit">🔍</button>
+  </form>
+
+  <div class="nav-right">
+    {% if user.is_authenticated %}
+      <a href="/profile/" class="nav-profile">{{ user.username }}</a>
+      <a href="/logout/" class="nav-btn">Выйти</a>
+    {% else %}
+      <a href="/login/"    class="nav-btn">Войти</a>
+      <a href="/register/" class="nav-btn" style="border-color:var(--red);color:var(--red)">Регистрация</a>
+    {% endif %}
+    <a href="/cart/" class="nav-cart">
+      КОРЗИНА
+      <span class="cart-badge" id="cart-count">0</span>
+    </a>
+  </div>
+
+  <div class="nav-burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/dept/stock/">Механизм</a>
+  <a href="/dept/interior/">Салон</a>
+  <a href="/dept/body/">Кузов</a>
+  <a href="/dept/tuning/">Тюнинг</a>
+  <a href="/dept/sport/">Спорт</a>
+  {% if user.is_authenticated %}
+  <a href="/profile/" style="color:var(--red)">{{ user.username }} — Профиль</a>
+  <a href="/logout/">Выйти</a>
+  {% else %}
+  <a href="/login/">Войти</a>
+  <a href="/register/" style="color:var(--red)">Регистрация</a>
+  {% endif %}
+  <form class="mobile-search" method="get" action="/search/">
+    <input type="text" name="q" placeholder="Поиск товаров...">
+    <button type="submit">НАЙТИ</button>
+  </form>
+</div>
+
+{% if messages %}
+<div class="messages-wrap">
+  {% for msg in messages %}
+  <div class="msg">{{ msg }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="page-body">
+  {% block content %}{% endblock %}
+</div>
+
+<footer>
+  <div class="footer-logo">CAMRY PERFORMANS</div>
+  <p>Запчасти и тюнинг Toyota Camry — Бишкек, Кыргызстан</p>
+  <a href="https://wa.me/996507605467" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;color:#25d366;margin-top:1rem;font-family:var(--font-mono);font-size:0.8rem;letter-spacing:2px">
+    💬 WhatsApp: +996 507 605 467
+  </a>
+  <p style="margin-top:0.5rem;font-size:0.75rem">&copy; 2026 Все права защищены</p>
+</footer>
+
+<script>
+fetch('/cart/count/').then(r=>r.json()).then(d=>{
+  document.getElementById('cart-count').textContent = d.count || 0;
+});
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+reveals.forEach(r=>obs.observe(r));
+setTimeout(()=>{
+  document.querySelectorAll('.msg').forEach(m=>m.style.opacity='0');
+},4000);
+
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+</script>
+</body>
+</html>

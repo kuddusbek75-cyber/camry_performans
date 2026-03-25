@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}Мой профиль — CAMRY PERFORMANS{% endblock %}
+{% block content %}
+
+<div style="background:var(--dark);border-bottom:1px solid var(--border);padding:4rem 0 2rem;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0">
+    <div class="speed-line sl1"></div>
+    <div class="speed-line sl2"></div>
+    <div class="speed-line sl3"></div>
+  </div>
+  <div class="container" style="position:relative;z-index:10">
+    <p class="section-label">ЛИЧНЫЙ КАБИНЕТ</p>
+    <h1 class="section-title" style="background:linear-gradient(135deg,#fff 0%,#e63030 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">МОЙ ПРОФИЛЬ</h1>
+  </div>
+</div>
+
+<div class="container" style="padding-top:3rem;padding-bottom:5rem">
+  <div style="display:grid;grid-template-columns:320px 1fr;gap:2rem;align-items:start">
+
+    <!-- Левая колонка — аватар и статистика -->
+    <div>
+
+      <!-- Аватар -->
+      <div style="background:var(--card);border:1px solid var(--border);padding:2rem;text-align:center;margin-bottom:1rem">
+        <div style="width:100px;height:100px;border-radius:50%;margin:0 auto 1rem;overflow:hidden;border:3px solid var(--red);background:#111">
+          {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" style="width:100%;height:100%;object-fit:cover">
+          {% else %}
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:2.5rem;color:var(--red)">
+              {{ user.username|first|upper }}
+            </div>
+          {% endif %}
+        </div>
+        <div style="font-family:var(--font-head);font-size:1.5rem;letter-spacing:2px">{{ user.username }}</div>
+        {% if user.first_name %}
+        <div style="color:var(--muted);font-size:0.9rem;margin-top:0.3rem">{{ user.first_name }} {{ user.last_name }}</div>
+        {% endif %}
+        {% if profile.car_model %}
+        <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--red);letter-spacing:2px;margin-top:0.5rem;border:1px solid var(--red);display:inline-block;padding:2px 10px">{{ profile.car_model }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Статистика -->
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:3px;margin-bottom:1rem">СТАТИСТИКА</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div style="text-align:center;border:1px solid var(--border);padding:1rem">
+            <div style="font-family:var(--font-head);font-size:2rem;color:var(--red)">{{ total_orders }}</div>
+            <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px">ЗАКАЗОВ</div>
+          </div>
+          <div style="text-align:center;border:1px solid var(--border);padding:1rem">
+            <div style="font-family:var(--font-head);font-size:2rem;color:#ff8c00">{{ total_items }}</div>
+            <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px">ТОВАРОВ</div>
+          </div>
+        </div>
+        <div style="text-align:center;border:1px solid var(--border);padding:1rem;margin-top:1rem">
+          <div style="font-family:var(--font-head);font-size:1.8rem;color:#a855f7">{{ total_spent|floatformat:0 }}</div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:2px">СОМ ПОТРАЧЕНО</div>
+        </div>
+      </div>
+
+      <!-- Поддержка -->
+      <div style="background:var(--card);border:1px solid var(--border);padding:1.5rem">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:3px;margin-bottom:1rem">ПОДДЕРЖКА</div>
+        <a href="tel:+996700000000" style="display:flex;align-items:center;gap:0.8rem;padding:0.8rem;border:1px solid var(--border);margin-bottom:0.5rem;transition:border-color 0.2s;color:var(--text)" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:1.2rem">📞</span>
+          <div>
+            <div style="font-size:0.85rem;font-weight:700">Позвонить</div>
+            <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted)">+996 700 000 000</div>
+          </div>
+        </a>
+        <a href="https://wa.me/996700000000" target="_blank" style="display:flex;align-items:center;gap:0.8rem;padding:0.8rem;border:1px solid var(--border);transition:border-color 0.2s;color:var(--text)" onmouseover="this.style.borderColor='#25d366'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:1.2rem">💬</span>
+          <div>
+            <div style="font-size:0.85rem;font-weight:700">WhatsApp</div>
+            <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted)">Написать нам</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Правая колонка -->
+    <div>
+
+      <!-- Форма редактирования -->
+      <div style="background:var(--card);border:1px solid var(--border);padding:2rem;margin-bottom:1.5rem">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:3px;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem">РЕДАКТИРОВАТЬ ПРОФИЛЬ</div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group">
+              <label class="form-label">Имя</label>
+              <input type="text" name="first_name" class="form-input" value="{{ user.first_name }}" placeholder="Ваше имя">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Фамилия</label>
+              <input type="text" name="last_name" class="form-input" value="{{ user.last_name }}" placeholder="Ваша фамилия">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-input" value="{{ user.email }}" placeholder="email@example.com">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group">
+              <label class="form-label">Телефон</label>
+              <input type="tel" name="phone" class="form-input" value="{{ profile.phone }}" placeholder="+996 700 000 000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Город</label>
+              <input type="text" name="city" class="form-input" value="{{ profile.city }}" placeholder="Бишкек">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Модель Camry</label>
+            <input type="text" name="car_model" class="form-input" value="{{ profile.car_model }}" placeholder="Например: Camry V70 2020">
+          </div>
+          <div class="form-group">
+            <label class="form-label">О себе</label>
+            <textarea name="bio" class="form-input" rows="3" placeholder="Расскажите о себе...">{{ profile.bio }}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Аватар</label>
+            <input type="file" name="avatar" accept="image/*" class="form-input" style="padding:0.5rem">
+          </div>
+          <button type="submit" class="btn-red" style="font-size:1rem;padding:0.8rem 2rem">СОХРАНИТЬ</button>
+        </form>
+      </div>
+
+      <!-- История заказов -->
+      <div style="background:var(--card);border:1px solid var(--border);padding:2rem">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:3px;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem">ИСТОРИЯ ЗАКАЗОВ</div>
+
+        {% if orders %}
+          {% for order in orders %}
+          <div style="border:1px solid var(--border);padding:1rem;margin-bottom:1rem;transition:border-color 0.2s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+              <div>
+                <span style="font-family:var(--font-head);font-size:1.1rem;letter-spacing:2px">ЗАКАЗ #{{ order.pk }}</span>
+                <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-left:1rem">{{ order.created_at|date:"d.m.Y" }}</span>
+              </div>
+              <div>
+                {% if order.status == 'new' %}
+                <span style="background:#1a3a2a;border:1px solid #10b981;color:#10b981;font-family:var(--font-mono);font-size:0.65rem;padding:3px 10px">НОВЫЙ</span>
+                {% elif order.status == 'processing' %}
+                <span style="background:#1a2a3a;border:1px solid #3b82f6;color:#3b82f6;font-family:var(--font-mono);font-size:0.65rem;padding:3px 10px">В ОБРАБОТКЕ</span>
+                {% elif order.status == 'ready' %}
+                <span style="background:#1a1a3a;border:1px solid #a855f7;color:#a855f7;font-family:var(--font-mono);font-size:0.65rem;padding:3px 10px">ГОТОВ</span>
+                {% elif order.status == 'done' %}
+                <span style="background:#1a1a1a;border:1px solid #888;color:#888;font-family:var(--font-mono);font-size:0.65rem;padding:3px 10px">ВЫДАН</span>
+                {% elif order.status == 'cancelled' %}
+                <span style="background:#2a1a1a;border:1px solid var(--red);color:var(--red);font-family:var(--font-mono);font-size:0.65rem;padding:3px 10px">ОТМЕНЁН</span>
+                {% endif %}
+              </div>
+            </div>
+            {% for item in order.items.all %}
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);padding:3px 0">
+              <span>{{ item.product.title }} × {{ item.quantity }}</span>
+              <span>{{ item.subtotal|floatformat:0 }} сом</span>
+            </div>
+            {% endfor %}
+            <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);margin-top:0.8rem;padding-top:0.8rem">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:2px">ИТОГО:</span>
+              <span style="font-family:var(--font-head);font-size:1.2rem;color:var(--red)">{{ order.total|floatformat:0 }} сом</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align:center;padding:3rem 0;color:var(--muted)">
+            <div style="font-family:var(--font-head);font-size:1.5rem;letter-spacing:3px;margin-bottom:1rem">ЗАКАЗОВ ЕЩЁ НЕТ</div>
+            <a href="/dept/stock/" class="btn-red" style="font-size:0.9rem;padding:0.6rem 1.5rem">ПЕРЕЙТИ В КАТАЛОГ</a>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.speed-line {
+  position:absolute;height:1px;
+  animation:speedAnim linear infinite;
+}
+.sl1 { top:30%;width:40%;background:linear-gradient(90deg,transparent,rgba(230,48,48,0.4),transparent);animation-duration:2s; }
+.sl2 { top:60%;width:60%;background:linear-gradient(90deg,transparent,rgba(255,140,0,0.3),transparent);animation-duration:2.5s;animation-delay:0.5s; }
+.sl3 { top:80%;width:50%;background:linear-gradient(90deg,transparent,rgba(168,85,247,0.3),transparent);animation-duration:1.8s;animation-delay:1s; }
+@keyframes speedAnim {
+  0%{left:-80%;opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{left:120%;opacity:0}
+}
+</style>
+
+{% endblock %}

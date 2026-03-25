@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.title }} — CAMRY PERFORMANS{% endblock %}
+{% block content %}
+
+<div style="background:var(--dark);border-bottom:1px solid var(--border);padding:4rem 0 2rem">
+  <div class="container">
+    <a href="javascript:history.back()" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:2px">← НАЗАД</a>
+    <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-top:0.5rem">
+      <a href="/dept/{{ product.category.department }}/" style="color:var(--red)">{{ product.category.get_department_display }}</a>
+      &nbsp;/&nbsp;
+      <a href="/category/{{ product.category.slug }}/">{{ product.category.name }}</a>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:3rem;padding-bottom:5rem">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start">
+
+    <div style="background:var(--card);border:1px solid var(--border);width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:5rem;color:var(--muted);overflow:hidden;position:relative">
+      {% if product.is_premium %}
+      <span style="position:absolute;top:12px;right:12px;background:var(--gold);color:#000;font-family:var(--font-mono);font-size:0.6rem;padding:3px 10px">PREMIUM</span>
+      {% endif %}
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="width:100%;height:100%;object-fit:cover">
+      {% else %}
+        &#9881;
+      {% endif %}
+    </div>
+
+    <div>
+      <p class="section-label">{{ product.category.name }}</p>
+      <h1 style="font-family:var(--font-head);font-size:clamp(2rem,4vw,3.5rem);letter-spacing:3px;line-height:1;margin-bottom:1.5rem">{{ product.title }}</h1>
+
+      <div style="font-family:var(--font-head);font-size:3rem;color:var(--red);letter-spacing:2px;margin-bottom:0.5rem">
+        {{ product.price|floatformat:0 }} <span style="font-size:1.5rem;color:var(--muted);font-family:var(--font-body)">сом</span>
+      </div>
+
+      {% if product.in_stock %}
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#0a2a1a;border:1px solid #10b981;padding:4px 12px;margin-bottom:1.5rem">
+        <span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block"></span>
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:#10b981;letter-spacing:2px">В НАЛИЧИИ</span>
+      </div>
+      {% else %}
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #555;padding:4px 12px;margin-bottom:1.5rem">
+        <span style="width:6px;height:6px;border-radius:50%;background:#555;display:inline-block"></span>
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:#777;letter-spacing:2px">НЕТ В НАЛИЧИИ</span>
+      </div>
+      {% endif %}
+
+      <p style="color:var(--muted);line-height:1.7;margin-bottom:2rem">{{ product.description }}</p>
+
+      {% if product.compatible_with.all %}
+      <div style="margin-bottom:2rem">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:2px;margin-bottom:0.5rem">СОВМЕСТИМОСТЬ:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+          {% for car in product.compatible_with.all %}
+          <span style="font-family:var(--font-mono);font-size:0.7rem;border:1px solid var(--border);padding:3px 10px">{{ car.name }} ({{ car.years }})</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if product.in_stock %}
+      <button class="btn-red" style="font-size:1.2rem;padding:0.9rem 2.5rem" onclick="addToCart(event, {{ product.pk }})">
+        В КОРЗИНУ
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if related %}
+  <hr class="divider" style="margin-top:5rem">
+  <p class="section-label">ПОХОЖИЕ ТОВАРЫ</p>
+  <h2 class="section-title">ЕЩЁ ИЗ {{ product.category.name|upper }}</h2>
+  <div class="product-grid" style="margin-top:2rem">
+    {% for p in related %}
+    <a href="/product/{{ p.pk }}/" class="product-card reveal">
+      {% if p.is_premium %}<span class="badge-premium">PREMIUM</span>{% endif %}
+      {% if p.in_stock %}<span class="badge-stock">В НАЛИЧИИ</span>{% else %}<span class="badge-nostock">НЕТ</span>{% endif %}
+      <div class="product-card-img">
+        {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}">{% else %}&#9881;{% endif %}
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-title">{{ p.title }}</div>
+        <div class="product-card-price">{{ p.price|floatformat:0 }} <span>сом</span></div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function addToCart(e, pk) {
+  e.preventDefault();
+  const btn = e.target;
+  fetch('/cart/add/' + pk + '/', {headers:{'X-Requested-With':'XMLHttpRequest'}})
+    .then(r=>r.json()).then(d=>{
+      document.getElementById('cart-count').textContent = d.count;
+      btn.textContent = 'ДОБАВЛЕНО ✓';
+      btn.style.background = '#10b981';
+      setTimeout(()=>{ btn.textContent='В КОРЗИНУ'; btn.style.background=''; }, 2000);
+    });
+}
+</script>
+{% endblock %}

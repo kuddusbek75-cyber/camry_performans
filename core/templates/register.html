@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — CAMRY PERFORMANS{% endblock %}
+{% block content %}
+
+<div style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:4rem 1rem">
+  <div style="width:100%;max-width:460px">
+
+    <p class="section-label" style="text-align:center">АККАУНТ</p>
+    <h1 class="section-title" style="text-align:center;margin-bottom:2rem">РЕГИСТРАЦИЯ</h1>
+
+    <div style="background:var(--card);border:1px solid var(--border);padding:2.5rem">
+      <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form-group">
+          <label class="form-label">{{ field.label }}</label>
+          <input type="{{ field.field.widget.input_type }}"
+                 name="{{ field.html_name }}"
+                 class="form-input"
+                 placeholder="{{ field.label }}"
+                 {% if field.value %}value="{{ field.value }}"{% endif %}>
+          {% if field.errors %}
+          <ul class="form-errors">
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-red" style="width:100%;text-align:center;font-size:1.1rem;padding:0.9rem;margin-top:0.5rem">
+          СОЗДАТЬ АККАУНТ
+        </button>
+      </form>
+
+      <div style="text-align:center;margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.5rem">
+        <span style="color:var(--muted);font-size:0.9rem">Уже есть аккаунт?</span>
+        <a href="/login/" style="color:var(--red);margin-left:0.5rem;font-weight:700">ВОЙТИ</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
